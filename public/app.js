@@ -3,17 +3,11 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // --- CONFIGURATION ---
-const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS
+const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS TO YOUR EMAIL
 
 // --- PASTE FIREBASE CONFIG HERE ---
 const firebaseConfig = {
-    apiKey: "YOUR_FULL_API_KEY_HERE", 
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+     
 };
 
 const app = initializeApp(firebaseConfig);
@@ -24,6 +18,7 @@ const db = getFirestore(app);
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const writeBtn = document.getElementById('write-btn');
+const contactBtn = document.getElementById('contact-btn'); // New Button
 const authModal = document.getElementById('auth-modal');
 const editorModal = document.getElementById('editor-modal');
 const recentContainer = document.getElementById('recent-container');
@@ -46,12 +41,19 @@ logoutBtn.addEventListener('click', () => signOut(auth));
 onAuthStateChanged(auth, (user) => {
     if (user) {
         if (user.email !== ADMIN_EMAIL) { alert("Access Denied"); signOut(auth); return; }
+        
+        // LOGGED IN (Admin Mode)
         authModal.classList.add('hidden');
         loginBtn.classList.add('hidden');
+        contactBtn.classList.add('hidden'); // Hide Contact Button
+        
         logoutBtn.classList.remove('hidden');
         writeBtn.classList.remove('hidden');
     } else {
+        // LOGGED OUT (Guest Mode)
         loginBtn.classList.remove('hidden');
+        contactBtn.classList.remove('hidden'); // Show Contact Button
+        
         logoutBtn.classList.add('hidden');
         writeBtn.classList.add('hidden');
     }
@@ -86,7 +88,6 @@ document.getElementById('publish-btn').addEventListener('click', async () => {
     const content = document.getElementById('post-content').value;
     const image = document.getElementById('post-image').value;
     
-    // Fallback image if empty
     const finalImage = image.trim() !== "" ? image : "https://images.unsplash.com/photo-1499750310159-5254f5337ef2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
 
     if (!title || !content) return alert("Please fill title and content");
@@ -96,7 +97,7 @@ document.getElementById('publish-btn').addEventListener('click', async () => {
             title: title,
             content: content,
             imageUrl: finalImage,
-            uid: auth.currentUser.uid, // SAVING UID FIXES PERMISSION ERROR
+            uid: auth.currentUser.uid,
             author: auth.currentUser.email,
             timestamp: serverTimestamp()
         };
@@ -117,7 +118,6 @@ document.getElementById('publish-btn').addEventListener('click', async () => {
 
 // --- 3. READ & SEARCH LOGIC ---
 
-// Global helper functions for HTML buttons
 window.editPostUI = (id) => { if(allPostsMap[id]) openEditor(allPostsMap[id], id); };
 window.deletePostUI = async (id) => { if(confirm("Delete this post?")) await deleteDoc(doc(db, "posts", id)); };
 
@@ -141,7 +141,6 @@ onSnapshot(q, (snapshot) => {
 
         const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Just now';
         
-        // This onerror code fixes your broken image links automatically
         const imgHtml = `<img src="${post.imageUrl}" class="recent-img" onerror="this.src='https://placehold.co/200x140?text=No+Image'">`;
 
         const adminTools = isAdmin ? `
@@ -165,18 +164,12 @@ onSnapshot(q, (snapshot) => {
     });
 });
 
-// Search Logic
 searchInput.addEventListener('keyup', (e) => {
     const term = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.recent-item');
-    
     items.forEach(item => {
         const title = item.querySelector('h3').innerText.toLowerCase();
         const content = item.querySelector('p').innerText.toLowerCase();
-        if (title.includes(term) || content.includes(term)) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
-        }
+        item.style.display = (title.includes(term) || content.includes(term)) ? 'flex' : 'none';
     });
 });
