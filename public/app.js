@@ -3,12 +3,11 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // --- CONFIGURATION ---
-const ADMIN_EMAIL = "placeholder"; // <--- Only this email can see the Write button
+const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; 
 
 // --- PASTE FIREBASE CONFIG HERE ---
-// (I am keeping the keys you shared in the file content, but remember to verify them)
 const firebaseConfig = {
-    placeholders
+
 };
 
 const app = initializeApp(firebaseConfig);
@@ -22,17 +21,25 @@ const writeBtn = document.getElementById('write-btn');
 const contactBtn = document.getElementById('contact-btn');
 const authModal = document.getElementById('auth-modal');
 const editorModal = document.getElementById('editor-modal');
-const recentContainer = document.getElementById('recent-container');
 const searchInput = document.getElementById('search-input');
 
-// View Containers
+// Container References
+const recentContainer = document.getElementById('recent-container');
+const allPostsContainer = document.getElementById('all-posts-container');
+const viewAllBtnContainer = document.getElementById('view-all-btn-container');
+const viewAllBtn = document.getElementById('view-all-btn');
+
+// View References
 const homeView = document.getElementById('home-view');
 const fullPostView = document.getElementById('full-post-view');
+const allPostsView = document.getElementById('all-posts-view'); // New View
 const fullPostContent = document.getElementById('full-post-content');
 const backHomeBtn = document.getElementById('back-home-btn');
+const backHomeFromAllBtn = document.getElementById('back-home-from-all-btn'); // New Back Button
 
 let isEditingId = null;
 let allPostsMap = {}; 
+let allPostsArray = []; // Store sorted posts array
 
 // --- 1. AUTHENTICATION ---
 loginBtn.addEventListener('click', () => authModal.classList.remove('hidden'));
@@ -49,20 +56,21 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         if (user.email !== ADMIN_EMAIL) { alert("Access Denied"); signOut(auth); return; }
         
-        // LOGGED IN (Admin Mode)
         authModal.classList.add('hidden');
         loginBtn.classList.add('hidden');
         if(contactBtn) contactBtn.classList.add('hidden');
-        
         logoutBtn.classList.remove('hidden');
-        writeBtn.classList.remove('hidden'); // Show Write Button
+        writeBtn.classList.remove('hidden');
+        
+        // Re-render posts to show admin tools
+        renderPosts();
     } else {
-        // LOGGED OUT
         loginBtn.classList.remove('hidden');
         if(contactBtn) contactBtn.classList.remove('hidden');
-        
         logoutBtn.classList.add('hidden');
-        writeBtn.classList.add('hidden'); // Hide Write Button
+        writeBtn.classList.add('hidden');
+        
+        renderPosts(); // Hide admin tools
     }
 });
 
@@ -134,11 +142,15 @@ window.deletePostUI = async (id, event) => {
     if(confirm("Delete this post?")) await deleteDoc(doc(db, "posts", id)); 
 };
 
+// --- NAVIGATION LOGIC ---
+
+// Go to Full Post
 window.viewPost = (id) => {
     const post = allPostsMap[id];
     if (!post) return;
 
     homeView.classList.add('hidden');
+    allPostsView.classList.add('hidden');
     fullPostView.classList.remove('hidden');
     window.scrollTo(0, 0);
 
@@ -154,54 +166,102 @@ window.viewPost = (id) => {
     `;
 };
 
+// Go to All Posts Page
+viewAllBtn.addEventListener('click', () => {
+    homeView.classList.add('hidden');
+    fullPostView.classList.add('hidden');
+    allPostsView.classList.remove('hidden');
+    window.scrollTo(0, 0);
+    
+    // Render ALL posts here
+    allPostsContainer.innerHTML = '';
+    allPostsArray.forEach(data => {
+        allPostsContainer.innerHTML += createPostHTML(data.post, data.id);
+    });
+});
+
+// Back to Home from Full Post
 backHomeBtn.addEventListener('click', () => {
     fullPostView.classList.add('hidden');
     homeView.classList.remove('hidden');
 });
 
+// Back to Home from All Posts
+backHomeFromAllBtn.addEventListener('click', () => {
+    allPostsView.classList.add('hidden');
+    homeView.classList.remove('hidden');
+});
+
+
+// --- POST RENDERING HELPER ---
+function createPostHTML(post, id) {
+    const user = auth.currentUser;
+    const isAdmin = user && user.email === ADMIN_EMAIL;
+    
+    const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Just now';
+    const previewText = post.content.length > 150 ? post.content.substring(0, 150) + "..." : post.content;
+    const imgHtml = `<img src="${post.imageUrl}" class="recent-img" onerror="this.src='https://placehold.co/200x140?text=No+Image'">`;
+
+    const adminTools = isAdmin ? `
+        <div class="admin-tools">
+            <i class="fas fa-edit" onclick="editPostUI('${id}', event)"> Edit</i>
+            <i class="fas fa-trash" onclick="deletePostUI('${id}', event)" style="margin-left:10px;"> Delete</i>
+        </div>` : '';
+
+    return `
+        <div class="recent-item" data-id="${id}" onclick="viewPost('${id}')">
+            ${imgHtml}
+            <div class="recent-info">
+                <h3>${post.title}</h3>
+                <span style="font-size:0.8rem; color:#999;">${date}</span>
+                <p>${previewText} <span class="read-more-link">Read More</span></p>
+                ${adminTools}
+            </div>
+        </div>
+    `;
+}
+
+// --- MAIN RENDER FUNCTION ---
+function renderPosts() {
+    recentContainer.innerHTML = '';
+    
+    // Only render first 6 on Home Page
+    const recentPosts = allPostsArray.slice(0, 6);
+    
+    if (recentPosts.length === 0) {
+        recentContainer.innerHTML = '<p>No posts found.</p>';
+    } else {
+        recentPosts.forEach(data => {
+            recentContainer.innerHTML += createPostHTML(data.post, data.id);
+        });
+    }
+
+    // Toggle "Read More Stories" button
+    if (allPostsArray.length > 6) {
+        viewAllBtnContainer.classList.remove('hidden');
+    } else {
+        viewAllBtnContainer.classList.add('hidden');
+    }
+}
+
+// --- REALTIME LISTENER ---
 const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
 
 onSnapshot(q, (snapshot) => {
-    recentContainer.innerHTML = '';
-    allPostsMap = {}; 
-    const user = auth.currentUser;
-    const isAdmin = user && user.email === ADMIN_EMAIL;
-
-    if (snapshot.empty) {
-        recentContainer.innerHTML = '<p>No posts found.</p>';
-        return;
-    }
-
+    allPostsArray = []; // Reset array
+    allPostsMap = {};
+    
     snapshot.forEach((docSnap) => {
         const post = docSnap.data();
         const id = docSnap.id;
         allPostsMap[id] = post;
-
-        const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Just now';
-        const previewText = post.content.length > 150 ? post.content.substring(0, 150) + "..." : post.content;
-        const imgHtml = `<img src="${post.imageUrl}" class="recent-img" onerror="this.src='https://placehold.co/200x140?text=No+Image'">`;
-
-        const adminTools = isAdmin ? `
-            <div class="admin-tools">
-                <i class="fas fa-edit" onclick="editPostUI('${id}', event)"> Edit</i>
-                <i class="fas fa-trash" onclick="deletePostUI('${id}', event)" style="margin-left:10px;"> Delete</i>
-            </div>` : '';
-
-        const html = `
-            <div class="recent-item" data-id="${id}" onclick="viewPost('${id}')">
-                ${imgHtml}
-                <div class="recent-info">
-                    <h3>${post.title}</h3>
-                    <span style="font-size:0.8rem; color:#999;">${date}</span>
-                    <p>${previewText} <span class="read-more-link">Read More</span></p>
-                    ${adminTools}
-                </div>
-            </div>
-        `;
-        recentContainer.innerHTML += html;
+        allPostsArray.push({ post, id });
     });
+
+    renderPosts();
 });
 
+// Search
 searchInput.addEventListener('keyup', (e) => {
     const term = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.recent-item');
