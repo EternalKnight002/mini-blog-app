@@ -43,11 +43,21 @@
         /* --- BLOG LIST --- */
         .section-title { font-size: 2rem; margin: 40px 0 30px 0; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .recent-list { display: flex; flex-direction: column; gap: 30px; margin-bottom: 50px; }
-        .recent-item { display: flex; gap: 20px; align-items: flex-start; background: #fff; padding: 20px; border-radius: 5px; border: 1px solid #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .recent-item { display: flex; gap: 20px; align-items: flex-start; background: #fff; padding: 20px; border-radius: 5px; border: 1px solid #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s; cursor: pointer; }
+        .recent-item:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
         .recent-img { width: 200px; height: 140px; object-fit: cover; border-radius: 4px; background-color: #eee; flex-shrink: 0; }
         .recent-info h3 { font-size: 1.5rem; margin: 0 0 10px 0; }
         .recent-info p { color: #666; line-height: 1.6; }
         
+        /* --- FULL POST VIEW (Reading Mode) --- */
+        #full-post-view { max-width: 800px; margin: 0 auto; padding-top: 20px; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #666; margin-bottom: 30px; transition: color 0.2s; }
+        .back-btn:hover { color: var(--accent-color); }
+        .article-header h1 { font-size: 2.8rem; margin-bottom: 15px; line-height: 1.2; }
+        .article-meta { color: #888; margin-bottom: 30px; font-size: 0.9rem; }
+        .article-img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 40px; }
+        .article-content { font-size: 1.2rem; line-height: 1.8; color: #222; white-space: pre-wrap; /* Keeps paragraphs */ }
+
         /* Admin Tools */
         .admin-tools { margin-top: 15px; display: flex; gap: 15px; color: #888; cursor: pointer; }
         .admin-tools i:hover { color: #333; }
@@ -63,7 +73,6 @@
         .social-links { display: flex; justify-content: center; gap: 25px; margin-bottom: 60px; }
         .social-links a { color: #555; font-size: 1.8rem; transition: color 0.3s; }
         .social-links a:hover { color: var(--accent-color); }
-        
         .copyright { font-size: 0.9rem; color: #999; margin-top: 50px; }
 
         /* --- MODALS --- */
@@ -80,9 +89,8 @@
         <nav>
             <div class="logo">Aman.</div>
             <div class="nav-links">
-                <a href="#">Home</a>
-                <a href="#recent-section">Blog</a>
-                
+                <a onclick="window.location.reload()">Home</a>
+                <a onclick="window.location.reload()">Blog</a>
                 <a id="contact-btn" href="#contact-footer">Contact Me</a>
                 
                 <a id="write-btn" class="hidden" style="color:#007bff;">&#9998; Write</a>
@@ -94,40 +102,44 @@
             </div>
         </nav>
 
-        <div class="hero">
-            <div class="hero-text">
-                <h2>Hi, I'm Aman.</h2>
-                <p>Welcome to my personal blog. I am sharing stories about life, tech, and building cool things.</p>
-                <button class="primary-btn" onclick="document.getElementById('recent-section').scrollIntoView()" style="width: auto;">Read My Blog</button>
+        <div id="home-view">
+            <div class="hero">
+                <div class="hero-text">
+                    <h2>Hi, I'm Aman.</h2>
+                    <p>Welcome to my personal blog. I am sharing stories about life, tech, and building cool things.</p>
+                    <button class="primary-btn" onclick="document.getElementById('recent-section').scrollIntoView()" style="width: auto;">Read My Blog</button>
+                </div>
+                <div class="hero-image">
+                    <img src="https://i.pinimg.com/1200x/24/e9/f8/24e9f8ddd447184d0e1022b3cf319306.jpg" alt="Hero Image">
+                </div>
             </div>
-            <div class="hero-image">
-                <img src="https://i.pinimg.com/1200x/24/e9/f8/24e9f8ddd447184d0e1022b3cf319306.jpg" alt="Hero Image">
+
+            <div id="recent-section">
+                <div class="section-title">Latest Stories</div>
+                <div id="recent-container" class="recent-list">
+                    <p>Loading...</p>
+                </div>
             </div>
         </div>
 
-        <div id="recent-section">
-            <div class="section-title">Latest Stories</div>
-            <div id="recent-container" class="recent-list">
-                <p>Loading...</p>
-            </div>
+        <div id="full-post-view" class="hidden">
+            <a id="back-home-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Stories</a>
+            <div id="full-post-content">
+                </div>
         </div>
+
     </div>
 
     <div id="contact-footer" class="footer-section">
         <h2>Get in touch</h2>
         <p>Looking for collaboration or full-time roles — feel free to reach out.</p>
-        
         <a href="mailto:resoamankumar@gmail.com" class="email-btn">Email me</a>
-        
         <div class="social-links">
             <a href="https://github.com/EternalKnight002" target="_blank"><i class="fab fa-github"></i></a>
             <a href="https://x.com/Eternalknigh" target="_blank"><i class="fab fa-x-twitter"></i></a>
             <a href="https://linkedin.com/in/aman-kumar-537a73296" target="_blank"><i class="fab fa-linkedin"></i></a>
         </div>
-
-        <div class="copyright">
-            © 2025 Aman Kumar
-        </div>
+        <div class="copyright">© 2025 Aman Kumar</div>
     </div>
 
     <div id="auth-modal" class="modal-overlay hidden">
