@@ -3,11 +3,12 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // --- CONFIGURATION ---
-const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS
+const ADMIN_EMAIL = "placeholder"; // <--- Only this email can see the Write button
 
 // --- PASTE FIREBASE CONFIG HERE ---
+// (I am keeping the keys you shared in the file content, but remember to verify them)
 const firebaseConfig = {
-  
+    placeholders
 };
 
 const app = initializeApp(firebaseConfig);
@@ -47,16 +48,21 @@ logoutBtn.addEventListener('click', () => signOut(auth));
 onAuthStateChanged(auth, (user) => {
     if (user) {
         if (user.email !== ADMIN_EMAIL) { alert("Access Denied"); signOut(auth); return; }
+        
+        // LOGGED IN (Admin Mode)
         authModal.classList.add('hidden');
         loginBtn.classList.add('hidden');
-        contactBtn.classList.add('hidden');
+        if(contactBtn) contactBtn.classList.add('hidden');
+        
         logoutBtn.classList.remove('hidden');
-        writeBtn.classList.remove('hidden');
+        writeBtn.classList.remove('hidden'); // Show Write Button
     } else {
+        // LOGGED OUT
         loginBtn.classList.remove('hidden');
-        contactBtn.classList.remove('hidden');
+        if(contactBtn) contactBtn.classList.remove('hidden');
+        
         logoutBtn.classList.add('hidden');
-        writeBtn.classList.add('hidden');
+        writeBtn.classList.add('hidden'); // Hide Write Button
     }
 });
 
@@ -118,30 +124,26 @@ document.getElementById('publish-btn').addEventListener('click', async () => {
 
 // --- 3. READ & DISPLAY LOGIC ---
 
-// --- Helper Functions Global Scope ---
 window.editPostUI = (id, event) => { 
-    event.stopPropagation(); // Prevent opening the post when clicking edit
+    event.stopPropagation(); 
     if(allPostsMap[id]) openEditor(allPostsMap[id], id); 
 };
 
 window.deletePostUI = async (id, event) => { 
-    event.stopPropagation(); // Prevent opening the post when clicking delete
+    event.stopPropagation(); 
     if(confirm("Delete this post?")) await deleteDoc(doc(db, "posts", id)); 
 };
 
-// --- NEW: View Full Post Function ---
 window.viewPost = (id) => {
     const post = allPostsMap[id];
     if (!post) return;
 
-    // Switch Views
     homeView.classList.add('hidden');
     fullPostView.classList.remove('hidden');
-    window.scrollTo(0, 0); // Scroll to top
+    window.scrollTo(0, 0);
 
     const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Recent';
 
-    // Inject Full Content
     fullPostContent.innerHTML = `
         <div class="article-header">
             <h1>${post.title}</h1>
@@ -152,13 +154,11 @@ window.viewPost = (id) => {
     `;
 };
 
-// --- NEW: Back Button Logic ---
 backHomeBtn.addEventListener('click', () => {
     fullPostView.classList.add('hidden');
     homeView.classList.remove('hidden');
 });
 
-// --- Realtime Listener ---
 const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
 
 onSnapshot(q, (snapshot) => {
@@ -178,9 +178,7 @@ onSnapshot(q, (snapshot) => {
         allPostsMap[id] = post;
 
         const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Just now';
-        // Create a short preview for the list
         const previewText = post.content.length > 150 ? post.content.substring(0, 150) + "..." : post.content;
-        
         const imgHtml = `<img src="${post.imageUrl}" class="recent-img" onerror="this.src='https://placehold.co/200x140?text=No+Image'">`;
 
         const adminTools = isAdmin ? `
@@ -189,14 +187,13 @@ onSnapshot(q, (snapshot) => {
                 <i class="fas fa-trash" onclick="deletePostUI('${id}', event)" style="margin-left:10px;"> Delete</i>
             </div>` : '';
 
-        // Added onclick="viewPost" to the container
         const html = `
             <div class="recent-item" data-id="${id}" onclick="viewPost('${id}')">
                 ${imgHtml}
                 <div class="recent-info">
                     <h3>${post.title}</h3>
                     <span style="font-size:0.8rem; color:#999;">${date}</span>
-                    <p>${previewText} <span style="color:#5452f6; font-weight:bold;">Read More</span></p>
+                    <p>${previewText} <span class="read-more-link">Read More</span></p>
                     ${adminTools}
                 </div>
             </div>
@@ -211,6 +208,6 @@ searchInput.addEventListener('keyup', (e) => {
     items.forEach(item => {
         const title = item.querySelector('h3').innerText.toLowerCase();
         const content = item.querySelector('p').innerText.toLowerCase();
-        item.style.display = (title.includes(term) || content.includes(term)) ? 'flex' : 'none';
+        item.style.display = (title.includes(term) || content.includes(term)) ? 'block' : 'none';
     });
 });
