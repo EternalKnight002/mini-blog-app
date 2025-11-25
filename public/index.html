@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akriti - Personal Blog</title>
+    <title>Aman Kumar - Personal Blog</title>
     <script type="module" src="app.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -14,9 +14,10 @@
             --serif-font: 'Playfair Display', serif;
             --bg-color: #fcfcfc;
             --text-color: #333;
-            --accent-color: #d4e1e3;
+            --accent-color: #5452f6;
         }
 
+        html { scroll-behavior: smooth; }
         body { margin: 0; font-family: var(--primary-font); background-color: var(--bg-color); color: var(--text-color); }
         h1, h2, h3 { font-family: var(--serif-font); font-weight: 700; margin: 0; }
         a { text-decoration: none; color: inherit; cursor: pointer; }
@@ -29,7 +30,6 @@
         .nav-links { display: flex; gap: 30px; align-items: center; }
         .nav-links a { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Search Bar */
         .search-bar input { padding: 10px 15px; border: 1px solid #ddd; border-radius: 20px; outline: none; background: #f9f9f9; width: 200px; }
 
         /* --- HERO SECTION --- */
@@ -38,19 +38,10 @@
         .hero-text h2 { font-size: 3rem; margin-bottom: 20px; line-height: 1.2; }
         .hero-text p { font-size: 1.1rem; color: #666; margin-bottom: 30px; }
         .hero-image { flex: 1; }
-        .hero-image img { width: 100%; border-radius: 5px; object-fit: cover; height: 400px; }
-
-        /* --- MODALS --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
-        .modal-box { background: white; padding: 40px; width: 90%; max-width: 500px; border-radius: 8px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; }
-        
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button.primary-btn { background-color: #333; color: #fff; border: none; padding: 12px 25px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; border-radius: 4px; width: 100%; }
+        .hero-image img { width: 100%; border-radius: 5px; object-fit: cover; height: auto; max-height: 500px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
         /* --- BLOG LIST --- */
         .section-title { font-size: 2rem; margin: 40px 0 30px 0; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
         .recent-list { display: flex; flex-direction: column; gap: 30px; margin-bottom: 50px; }
         .recent-item { display: flex; gap: 20px; align-items: flex-start; background: #fff; padding: 20px; border-radius: 5px; border: 1px solid #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .recent-img { width: 200px; height: 140px; object-fit: cover; border-radius: 4px; background-color: #eee; flex-shrink: 0; }
@@ -61,21 +52,38 @@
         .admin-tools { margin-top: 15px; display: flex; gap: 15px; color: #888; cursor: pointer; }
         .admin-tools i:hover { color: #333; }
 
-        /* --- FOOTER --- */
-        .about-section { background-color: var(--accent-color); padding: 60px 0; text-align: center; }
-        footer { background-color: #f4f4f4; padding: 20px 0; text-align: center; font-size: 0.8rem; color: #777; }
+        /* --- FOOTER SECTION --- */
+        .footer-section { padding: 100px 0 50px 0; text-align: center; background-color: #fff; border-top: 1px solid #f0f0f0; }
+        .footer-section h2 { font-size: 2.5rem; margin-bottom: 15px; color: #111; }
+        .footer-section p { font-size: 1.1rem; color: #666; margin-bottom: 30px; }
+        
+        .email-btn { background-color: var(--accent-color); color: white; padding: 12px 30px; border-radius: 6px; font-weight: 700; font-size: 1rem; transition: background 0.3s; display: inline-block; margin-bottom: 30px; }
+        .email-btn:hover { background-color: #403ec2; }
+        
+        .social-links { display: flex; justify-content: center; gap: 25px; margin-bottom: 60px; }
+        .social-links a { color: #555; font-size: 1.8rem; transition: color 0.3s; }
+        .social-links a:hover { color: var(--accent-color); }
+        
+        .copyright { font-size: 0.9rem; color: #999; margin-top: 50px; }
+
+        /* --- MODALS --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
+        .modal-box { background: white; padding: 40px; width: 90%; max-width: 500px; border-radius: 8px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button.primary-btn { background-color: #333; color: #fff; border: none; padding: 12px 25px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; border-radius: 4px; width: 100%; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <nav>
-            <div class="logo">Akriti</div>
+            <div class="logo">Aman.</div>
             <div class="nav-links">
                 <a href="#">Home</a>
                 <a href="#recent-section">Blog</a>
                 
-                <a id="contact-btn" href="mailto:your-email@gmail.com">Contact Me</a>
+                <a id="contact-btn" href="#contact-footer">Contact Me</a>
                 
                 <a id="write-btn" class="hidden" style="color:#007bff;">&#9998; Write</a>
                 <a id="logout-btn" class="hidden">Sign Out</a>
@@ -88,12 +96,12 @@
 
         <div class="hero">
             <div class="hero-text">
-                <h2>Hi, I'm Akriti.</h2>
-                <p>Welcome to my personal blog. I am a creative writer sharing stories about life, productivity, and finding beauty in the little things.</p>
+                <h2>Hi, I'm Aman.</h2>
+                <p>Welcome to my personal blog. I am sharing stories about life, tech, and building cool things.</p>
                 <button class="primary-btn" onclick="document.getElementById('recent-section').scrollIntoView()" style="width: auto;">Read My Blog</button>
             </div>
             <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hero Image">
+                <img src="https://i.pinimg.com/1200x/24/e9/f8/24e9f8ddd447184d0e1022b3cf319306.jpg" alt="Hero Image">
             </div>
         </div>
 
@@ -105,16 +113,22 @@
         </div>
     </div>
 
-    <div class="about-section">
-        <h2>About Me</h2>
-        <br>
-        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" style="width:150px; height:200px; object-fit:cover; border-radius:5px;">
-        <p style="max-width:600px; margin:20px auto;">I have over five years of experience in creative writing. Writing is not just my profession—it's my passion.</p>
-    </div>
+    <div id="contact-footer" class="footer-section">
+        <h2>Get in touch</h2>
+        <p>Looking for collaboration or full-time roles — feel free to reach out.</p>
+        
+        <a href="mailto:resoamankumar@gmail.com" class="email-btn">Email me</a>
+        
+        <div class="social-links">
+            <a href="https://github.com/EternalKnight002" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://x.com/Eternalknigh" target="_blank"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://linkedin.com/in/aman-kumar-537a73296" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
 
-    <footer>
-        <p>Copyright © Akriti. All rights reserved.</p>
-    </footer>
+        <div class="copyright">
+            © 2025 Aman Kumar
+        </div>
+    </div>
 
     <div id="auth-modal" class="modal-overlay hidden">
         <div class="modal-box">

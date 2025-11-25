@@ -3,17 +3,11 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // --- CONFIGURATION ---
-const ADMIN_EMAIL = "YOUR_EMAIL@gmail.com"; // <--- CHANGE THIS TO YOUR EMAIL
+const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS TO YOUR EMAIL
 
 // --- PASTE FIREBASE CONFIG HERE ---
 const firebaseConfig = {
-    apiKey: "YOUR_FULL_API_KEY_HERE", 
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+     
 };
 
 const app = initializeApp(firebaseConfig);
