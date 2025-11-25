@@ -16,7 +16,7 @@
             --bg-secondary: #1a1a1a;
             --text-color: #e0e0e0;
             --text-secondary: #b0b0b0;
-            --accent-color: #5452f6;
+            --accent-color: #ffffff; 
             --border-color: #2a2a2a;
         }
 
@@ -36,97 +36,84 @@
 
         /* --- NAVIGATION --- */
         nav { 
-            padding: 20px 0; 
+            padding: 50px 20px 30px 20px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            position: sticky;
-            top: 0;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .logo { 
-            font-size: 2rem; 
-            letter-spacing: 2px; 
-            font-weight: 700;
-            color: #fff;
-        }
-        .nav-links { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
-        .nav-links a { 
-            font-weight: 600; 
-            font-size: 0.9rem; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            transition: color 0.3s;
-            color: var(--text-secondary);
-        }
-        .nav-links a:hover { color: var(--accent-color); }
-        
-        .search-bar input { 
-            padding: 10px 15px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 20px; 
-            outline: none; 
-            background: var(--bg-secondary); 
-            color: var(--text-color);
-            width: 200px;
-        }
-        .search-bar input::placeholder { color: #666; }
-
-        /* --- HERO SECTION (FULL PAGE) --- */
-        .hero { 
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-        }
-        .hero-bg {
-            position: absolute;
+            position: absolute; 
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.15;
-            filter: grayscale(50%);
+            right: 0;
+            margin: 0 auto;
+            max-width: 1200px;
+            background: transparent;
+            z-index: 999;
+        }
+        .logo { font-size: 2rem; letter-spacing: 2px; font-weight: 700; color: #fff; }
+        .nav-links { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
+        .nav-links a { 
+            font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+            transition: color 0.3s; color: rgba(255, 255, 255, 0.8);
+        }
+        .nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        
+        /* Write Button Style */
+        #write-btn {
+            border: 1px solid #fff;
+            padding: 5px 15px;
+            border-radius: 4px;
+        }
+        #write-btn:hover { background: #fff; color: #000; }
+
+        .search-bar input { 
+            padding: 12px 20px; border: 1px solid rgba(255,255,255,0.3); border-radius: 25px; 
+            outline: none; background: rgba(0,0,0,0.4); color: #fff; width: 220px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero { 
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+            background: #000; 
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 1; filter: none;
         }
         .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 800px;
-            padding: 40px 20px;
+            position: relative; z-index: 2; text-align: center; max-width: 800px; padding: 40px 20px;
+            margin-top: 60px;
         }
         .hero-content h1 { 
-            font-size: 5rem; 
-            margin-bottom: 20px; 
-            line-height: 1.1;
-            background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 4.5rem; margin-bottom: 20px; line-height: 1.1;
+            color: #fff;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
-        .hero-content .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            font-weight: 300;
+        .hero-content .subtitle { 
+            font-size: 1.5rem; color: #e0e0e0; margin-bottom: 40px; font-weight: 300; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
+        
+        /* GHOST BUTTON */
+        .simple-btn {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 15px 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .simple-btn:hover { background: #fff; color: #000; }
+
         .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-        }
-        .scroll-indicator i {
-            font-size: 2rem;
-            color: var(--text-secondary);
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); animation: bounce 2s infinite;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
@@ -134,277 +121,121 @@
             60% { transform: translateY(-5px) translateX(-50%); }
         }
 
-        /* --- ABOUT SECTION --- */
-        .about-section {
-            padding: 100px 0;
-            background: var(--bg-secondary);
-        }
-        .about-content {
-            display: flex;
-            gap: 60px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .about-image {
-            flex: 1;
-            min-width: 300px;
-        }
-        .about-image img {
-            width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(84, 82, 246, 0.2);
-        }
-        .about-text {
-            flex: 1;
-            min-width: 300px;
-        }
-        .about-text h2 {
-            font-size: 3rem;
-            margin-bottom: 30px;
-        }
-        .about-text p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-
         /* --- BLOG LIST --- */
-        .blog-section {
-            padding: 100px 0;
-        }
-        .section-title { 
-            font-size: 3rem; 
-            margin-bottom: 50px; 
-            text-align: center;
-        }
+        .blog-section { padding: 80px 0; }
+        .section-title { font-size: 2.5rem; margin-bottom: 40px; text-align: center; }
         .recent-list { 
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; margin-bottom: 50px;
         }
         .recent-item { 
-            background: var(--bg-secondary); 
-            border-radius: 10px; 
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s; 
-            cursor: pointer;
-            border: 1px solid var(--border-color);
+            background: var(--bg-secondary); border-radius: 10px; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 1px solid var(--border-color);
         }
-        .recent-item:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 40px rgba(84, 82, 246, 0.3);
-        }
-        .recent-img { 
-            width: 100%; 
-            height: 250px; 
-            object-fit: cover; 
-            background-color: #222;
-        }
-        .recent-info {
-            padding: 25px;
-        }
-        .recent-info h3 { 
-            font-size: 1.5rem; 
-            margin: 0 0 10px 0;
-            color: #fff;
-        }
-        .recent-info p { 
-            color: var(--text-secondary); 
-            line-height: 1.6;
-            margin: 10px 0;
-        }
-        .read-more {
+        .recent-item:hover { transform: translateY(-5px); box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1); }
+        .recent-img { width: 100%; height: 250px; object-fit: cover; background-color: #222; }
+        .recent-info { padding: 25px; }
+        .recent-info h3 { font-size: 1.5rem; margin: 0 0 10px 0; color: #fff; }
+        .recent-info p { color: var(--text-secondary); line-height: 1.6; margin: 10px 0; }
+        
+        .read-more-link {
             color: var(--accent-color);
             font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.3s;
         }
-        
-        /* --- FULL POST VIEW (Reading Mode) --- */
-        #full-post-view { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            padding: 80px 20px;
-        }
-        .back-btn { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 8px; 
-            font-weight: 700; 
-            color: var(--text-secondary); 
-            margin-bottom: 40px; 
-            transition: color 0.3s;
-            padding: 10px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-        }
-        .back-btn:hover { color: var(--accent-color); }
-        .article-header h1 { 
-            font-size: 3.5rem; 
-            margin-bottom: 20px; 
-            line-height: 1.2;
-        }
-        .article-meta { 
-            color: var(--text-secondary); 
-            margin-bottom: 40px; 
-            font-size: 1rem;
-        }
-        .article-img { 
-            width: 100%; 
-            height: auto; 
-            border-radius: 10px; 
-            margin-bottom: 50px;
-        }
-        .article-content { 
-            font-size: 1.2rem; 
-            line-height: 1.9; 
-            color: var(--text-color); 
-            white-space: pre-wrap;
+        .read-more-link:hover { border-bottom: 1px solid #fff; }
+
+        /* Center container for the "View All" button */
+        .center-btn-container {
+            text-align: center;
+            margin-top: 40px;
         }
 
-        /* Admin Tools */
-        .admin-tools { 
-            margin-top: 20px; 
-            display: flex; 
-            gap: 20px; 
-            color: var(--text-secondary); 
-        }
-        .admin-tools i { 
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .admin-tools i:hover { color: var(--accent-color); }
-
-        /* --- CONTACT/FOOTER SECTION --- */
-        .footer-section { 
-            padding: 100px 0; 
-            text-align: center; 
+        /* --- ABOUT SECTION --- */
+        .about-section {
+            padding: 80px 0;
             background: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
         }
-        .footer-section h2 { 
-            font-size: 3rem; 
-            margin-bottom: 20px;
+        .about-content {
+            display: flex; gap: 60px; align-items: center; justify-content: space-between;
         }
-        .footer-section p { 
-            font-size: 1.2rem; 
-            color: var(--text-secondary); 
-            margin-bottom: 40px;
+        .about-text { flex: 1; }
+        .about-text h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .about-text h4 { 
+            font-family: var(--primary-font); font-weight: 400; 
+            color: var(--accent-color);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;
         }
+        .about-text p { font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary); }
+        .about-image { flex: 0 0 350px; height: 450px; position: relative; }
+        .about-image img {
+            width: 100%; height: 100%; object-fit: cover; 
+            border-radius: 20px;
+            box-shadow: 15px 15px 0px rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- FOOTER SECTION --- */
+        .footer-section { 
+            padding: 50px 0 30px 0; text-align: center; background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-section h2 { font-size: 2rem; margin-bottom: 10px; }
+        .footer-section p { font-size: 1rem; color: var(--text-secondary); margin-bottom: 20px; }
         
         .email-btn { 
-            background-color: var(--accent-color); 
-            color: white; 
-            padding: 15px 40px; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            font-size: 1rem; 
-            transition: background 0.3s, transform 0.3s; 
-            display: inline-block; 
-            margin-bottom: 40px;
+            background: transparent; color: #fff; border: none; padding: 0;
+            font-weight: 700; font-size: 1.2rem; text-transform: uppercase;
+            letter-spacing: 2px; cursor: pointer; transition: color 0.3s;
+            display: inline-block; margin-bottom: 25px; text-decoration: underline; text-underline-offset: 8px;
         }
-        .email-btn:hover { 
-            background-color: #403ec2;
-            transform: translateY(-2px);
-        }
+        .email-btn:hover { color: var(--text-secondary); }
         
-        .social-links { 
-            display: flex; 
-            justify-content: center; 
-            gap: 30px; 
-            margin-bottom: 60px;
+        .social-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .social-links a { color: var(--text-secondary); font-size: 1.5rem; transition: color 0.3s; }
+        .social-links a:hover { color: #fff; }
+        .copyright { font-size: 0.8rem; color: #555; margin-top: 10px; }
+
+        /* --- VIEWS (Full Post, All Posts) --- */
+        #full-post-view, #all-posts-view { max-width: 1200px; margin: 0 auto; padding: 120px 20px 40px 20px; }
+        
+        .back-btn { 
+            display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--text-secondary); 
+            margin-bottom: 40px; padding: 10px 20px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer;
         }
-        .social-links a { 
-            color: var(--text-secondary); 
-            font-size: 2rem; 
-            transition: color 0.3s, transform 0.3s;
-        }
-        .social-links a:hover { 
-            color: var(--accent-color);
-            transform: translateY(-3px);
-        }
-        .copyright { 
-            font-size: 0.9rem; 
-            color: #666; 
-            margin-top: 50px;
-        }
+        .back-btn:hover { border-color: #fff; color: #fff; }
+
+        .article-header h1 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; }
+        .article-meta { color: var(--text-secondary); margin-bottom: 40px; }
+        .article-img { width: 100%; height: auto; border-radius: 10px; margin-bottom: 50px; }
+        .article-content { font-size: 1.2rem; line-height: 1.9; color: var(--text-color); white-space: pre-wrap; }
 
         /* --- MODALS --- */
         .modal-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.85); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 1000; 
-            backdrop-filter: blur(5px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); 
+            display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px);
         }
         .modal-box { 
-            background: var(--bg-secondary); 
-            padding: 40px; 
-            width: 90%; 
-            max-width: 500px; 
-            border-radius: 10px; 
-            position: relative; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            border: 1px solid var(--border-color);
+            background: var(--bg-secondary); padding: 40px; width: 90%; max-width: 500px; 
+            border-radius: 10px; position: relative; border: 1px solid var(--border-color);
         }
-        .modal-box h3 {
-            color: #fff;
-            margin-bottom: 20px;
-        }
-        .close-modal { 
-            position: absolute; 
-            top: 15px; 
-            right: 20px; 
-            font-size: 1.5rem; 
-            cursor: pointer; 
-            color: var(--text-secondary);
-            transition: color 0.3s;
-        }
-        .close-modal:hover { color: var(--accent-color); }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
         input, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 5px; 
-            background: var(--bg-color);
-            color: var(--text-color);
-        }
-        input::placeholder, textarea::placeholder {
-            color: #666;
+            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); 
+            border-radius: 5px; background: var(--bg-color); color: var(--text-color);
         }
         button.primary-btn { 
-            background-color: var(--accent-color); 
-            color: #fff; 
-            border: none; 
-            padding: 12px 25px; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            font-size: 0.9rem; 
-            border-radius: 5px; 
-            width: 100%;
-            transition: background 0.3s, transform 0.3s;
-            font-weight: 700;
-        }
-        button.primary-btn:hover {
-            background-color: #403ec2;
-            transform: translateY(-2px);
+            background-color: #fff; color: #000; border: none; padding: 12px 25px; 
+            cursor: pointer; text-transform: uppercase; font-weight: 700; border-radius: 5px; width: 100%;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 3rem; }
-            .hero-content .subtitle { font-size: 1.2rem; }
-            .about-content { flex-direction: column; }
-            .section-title { font-size: 2rem; }
-            .recent-list { grid-template-columns: 1fr; }
+            .about-content { flex-direction: column-reverse; }
+            .about-image { width: 100%; flex: auto; height: 300px; }
             .nav-links { gap: 15px; font-size: 0.8rem; }
+            nav { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -413,12 +244,13 @@
     <nav class="container">
         <div class="logo">AMAN.</div>
         <div class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#blog">Blog</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+            <a onclick="document.getElementById('home').scrollIntoView()">Home</a>
+            <a onclick="document.getElementById('blog').scrollIntoView()">Blog</a>
+            <a onclick="document.getElementById('about').scrollIntoView()">About</a>
+            <a onclick="document.getElementById('contact').scrollIntoView()">Contact</a>
             
-            <a id="write-btn" class="hidden" style="color:var(--accent-color);">&#9998; Write</a>
+            <!-- ADMIN BUTTONS -->
+            <a id="write-btn" class="hidden">&#9998; Write</a>
             <a id="logout-btn" class="hidden">Sign Out</a>
             <a id="login-btn">Sign In</a>
         </div>
@@ -427,52 +259,70 @@
         </div>
     </nav>
 
+    <!-- HOME VIEW -->
     <div id="home-view">
         <section id="home" class="hero">
             <img src="https://i.pinimg.com/1200x/24/e9/f8/24e9f8ddd447184d0e1022b3cf319306.jpg" alt="Background" class="hero-bg">
             <div class="hero-content">
                 <h1>Hi, I'm Aman.</h1>
                 <p class="subtitle">Crafting stories about life, technology, and innovation</p>
-                <button class="primary-btn" onclick="document.getElementById('blog').scrollIntoView()" style="width: auto; padding: 15px 40px;">Explore My Blog</button>
+                <button class="simple-btn" onclick="document.getElementById('blog').scrollIntoView()">Explore My Blog</button>
             </div>
             <div class="scroll-indicator">
                 <i class="fas fa-chevron-down"></i>
             </div>
         </section>
 
-        <section id="about" class="about-section">
+        <section id="blog" class="blog-section">
             <div class="container">
-                <div class="about-content">
-                    <div class="about-image">
-                        <img src="hero.jpg" alt="Aman Kumar" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600'">
-                    </div>
-                    <div class="about-text">
-                        <h2>About Me</h2>
-                        <p>Hi, I'm Aman Kumar. I build scalable cloud-native applications with Java, React, and Spring Boot. I focus on clean architecture, performant frontends, and reliable DevOps automation. I am passionate about bridging innovation between software, cloud infrastructure, and AI-driven development.</p>
-                    </div>
+                <div class="section-title">Latest Stories</div>
+                <!-- Holds ONLY the top 6 posts -->
+                <div id="recent-container" class="recent-list">
+                    <p>Loading...</p>
+                </div>
+                
+                <!-- "Read More Stories" Button (Initially Hidden) -->
+                <div id="view-all-btn-container" class="center-btn-container hidden">
+                    <button id="view-all-btn" class="simple-btn">Read More Stories</button>
                 </div>
             </div>
         </section>
 
-        <section id="blog" class="blog-section">
+        <section id="about" class="about-section">
             <div class="container">
-                <div class="section-title">Latest Stories</div>
-                <div id="recent-container" class="recent-list">
-                    <p>Loading...</p>
+                <div class="about-content">
+                    <div class="about-text">
+                        <h4>Full Stack Developer</h4>
+                        <h2>About Me</h2>
+                        <p>Hi, I'm Aman Kumar. I build scalable cloud-native applications with Java, React, and Spring Boot. I focus on clean architecture, performant frontends, and reliable DevOps automation. I am passionate about bridging innovation between software, cloud infrastructure, and AI-driven development. Outside of code, I enjoy exploring new tech and reading good books.</p>
+                    </div>
+                    <div class="about-image">
+                        <img src="hero.jpg" alt="Aman Kumar" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600'">
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
+    <!-- ALL POSTS VIEW (Hidden by default) -->
+    <div id="all-posts-view" class="hidden">
+        <a id="back-home-from-all-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <h2 class="section-title" style="text-align: left;">All Stories</h2>
+        <!-- Holds ALL posts -->
+        <div id="all-posts-container" class="recent-list"></div>
+    </div>
+
+    <!-- FULL POST VIEW -->
     <div id="full-post-view" class="hidden">
         <a id="back-home-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Stories</a>
         <div id="full-post-content"></div>
     </div>
 
+    <!-- FOOTER -->
     <section id="contact" class="footer-section">
         <div class="container">
             <h2>Get in touch</h2>
-            <p>Looking for collaboration or full-time roles — feel free to reach out.</p>
+            <p>Looking for collaboration or full-time roles.</p>
             <a href="mailto:resoamankumar@gmail.com" class="email-btn">Email Me</a>
             <div class="social-links">
                 <a href="https://github.com/EternalKnight002" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
@@ -483,6 +333,7 @@
         </div>
     </section>
 
+    <!-- MODALS -->
     <div id="auth-modal" class="modal-overlay hidden">
         <div class="modal-box">
             <span class="close-modal" onclick="document.getElementById('auth-modal').classList.add('hidden')">&times;</span>
