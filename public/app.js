@@ -3,11 +3,11 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // --- CONFIGURATION ---
-const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS TO YOUR EMAIL
+const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS
 
 // --- PASTE FIREBASE CONFIG HERE ---
 const firebaseConfig = {
-     
+   
 };
 
 const app = initializeApp(firebaseConfig);
@@ -18,11 +18,17 @@ const db = getFirestore(app);
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const writeBtn = document.getElementById('write-btn');
-const contactBtn = document.getElementById('contact-btn'); // New Button
+const contactBtn = document.getElementById('contact-btn');
 const authModal = document.getElementById('auth-modal');
 const editorModal = document.getElementById('editor-modal');
 const recentContainer = document.getElementById('recent-container');
 const searchInput = document.getElementById('search-input');
+
+// View Containers
+const homeView = document.getElementById('home-view');
+const fullPostView = document.getElementById('full-post-view');
+const fullPostContent = document.getElementById('full-post-content');
+const backHomeBtn = document.getElementById('back-home-btn');
 
 let isEditingId = null;
 let allPostsMap = {}; 
@@ -41,19 +47,14 @@ logoutBtn.addEventListener('click', () => signOut(auth));
 onAuthStateChanged(auth, (user) => {
     if (user) {
         if (user.email !== ADMIN_EMAIL) { alert("Access Denied"); signOut(auth); return; }
-        
-        // LOGGED IN (Admin Mode)
         authModal.classList.add('hidden');
         loginBtn.classList.add('hidden');
-        contactBtn.classList.add('hidden'); // Hide Contact Button
-        
+        contactBtn.classList.add('hidden');
         logoutBtn.classList.remove('hidden');
         writeBtn.classList.remove('hidden');
     } else {
-        // LOGGED OUT (Guest Mode)
         loginBtn.classList.remove('hidden');
-        contactBtn.classList.remove('hidden'); // Show Contact Button
-        
+        contactBtn.classList.remove('hidden');
         logoutBtn.classList.add('hidden');
         writeBtn.classList.add('hidden');
     }
@@ -87,7 +88,6 @@ document.getElementById('publish-btn').addEventListener('click', async () => {
     const title = document.getElementById('post-title').value;
     const content = document.getElementById('post-content').value;
     const image = document.getElementById('post-image').value;
-    
     const finalImage = image.trim() !== "" ? image : "https://images.unsplash.com/photo-1499750310159-5254f5337ef2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
 
     if (!title || !content) return alert("Please fill title and content");
@@ -116,11 +116,49 @@ document.getElementById('publish-btn').addEventListener('click', async () => {
     }
 });
 
-// --- 3. READ & SEARCH LOGIC ---
+// --- 3. READ & DISPLAY LOGIC ---
 
-window.editPostUI = (id) => { if(allPostsMap[id]) openEditor(allPostsMap[id], id); };
-window.deletePostUI = async (id) => { if(confirm("Delete this post?")) await deleteDoc(doc(db, "posts", id)); };
+// --- Helper Functions Global Scope ---
+window.editPostUI = (id, event) => { 
+    event.stopPropagation(); // Prevent opening the post when clicking edit
+    if(allPostsMap[id]) openEditor(allPostsMap[id], id); 
+};
 
+window.deletePostUI = async (id, event) => { 
+    event.stopPropagation(); // Prevent opening the post when clicking delete
+    if(confirm("Delete this post?")) await deleteDoc(doc(db, "posts", id)); 
+};
+
+// --- NEW: View Full Post Function ---
+window.viewPost = (id) => {
+    const post = allPostsMap[id];
+    if (!post) return;
+
+    // Switch Views
+    homeView.classList.add('hidden');
+    fullPostView.classList.remove('hidden');
+    window.scrollTo(0, 0); // Scroll to top
+
+    const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Recent';
+
+    // Inject Full Content
+    fullPostContent.innerHTML = `
+        <div class="article-header">
+            <h1>${post.title}</h1>
+            <div class="article-meta">Published on ${date} • By Aman Kumar</div>
+        </div>
+        <img src="${post.imageUrl}" class="article-img" onerror="this.src='https://placehold.co/800x400?text=No+Image'">
+        <div class="article-content">${post.content}</div>
+    `;
+};
+
+// --- NEW: Back Button Logic ---
+backHomeBtn.addEventListener('click', () => {
+    fullPostView.classList.add('hidden');
+    homeView.classList.remove('hidden');
+});
+
+// --- Realtime Listener ---
 const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
 
 onSnapshot(q, (snapshot) => {
@@ -140,22 +178,25 @@ onSnapshot(q, (snapshot) => {
         allPostsMap[id] = post;
 
         const date = post.timestamp ? post.timestamp.toDate().toDateString() : 'Just now';
+        // Create a short preview for the list
+        const previewText = post.content.length > 150 ? post.content.substring(0, 150) + "..." : post.content;
         
         const imgHtml = `<img src="${post.imageUrl}" class="recent-img" onerror="this.src='https://placehold.co/200x140?text=No+Image'">`;
 
         const adminTools = isAdmin ? `
             <div class="admin-tools">
-                <i class="fas fa-edit" onclick="editPostUI('${id}')"> Edit</i>
-                <i class="fas fa-trash" onclick="deletePostUI('${id}')" style="margin-left:10px;"> Delete</i>
+                <i class="fas fa-edit" onclick="editPostUI('${id}', event)"> Edit</i>
+                <i class="fas fa-trash" onclick="deletePostUI('${id}', event)" style="margin-left:10px;"> Delete</i>
             </div>` : '';
 
+        // Added onclick="viewPost" to the container
         const html = `
-            <div class="recent-item" data-id="${id}">
+            <div class="recent-item" data-id="${id}" onclick="viewPost('${id}')">
                 ${imgHtml}
                 <div class="recent-info">
                     <h3>${post.title}</h3>
                     <span style="font-size:0.8rem; color:#999;">${date}</span>
-                    <p>${post.content}</p>
+                    <p>${previewText} <span style="color:#5452f6; font-weight:bold;">Read More</span></p>
                     ${adminTools}
                 </div>
             </div>
