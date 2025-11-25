@@ -1,11 +1,12 @@
-// Import the functions you need from the SDKs
+// Import functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-analytics.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
-// TODO: Replace with your actual config
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+// --- PASTE YOUR CONFIG HERE ---
 const firebaseConfig = {
-apiKey: "YOUR_FULL_API_KEY_HERE", 
+    apiKey: "YOUR_FULL_API_KEY_HERE", 
     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
     projectId: "YOUR_PROJECT_ID",
     storageBucket: "YOUR_PROJECT_ID.appspot.com",
@@ -14,129 +15,141 @@ apiKey: "YOUR_FULL_API_KEY_HERE",
     measurementId: "YOUR_MEASUREMENT_ID"
 };
 
-// Initialize Firebase
+// Initialize
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app); // Initialize Analytics
-const auth = getAuth(app); // Initialize Auth
-const db = getFirestore(app); // Initialize Firestore
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// 1. --- AUTHENTICATION FUNCTIONS ---
-
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const userStatus = document.getElementById('user-status');
-const signupBtn = document.getElementById('signup-btn');
-const signinBtn = document.getElementById('signin-btn');
+// --- DOM ELEMENTS ---
+const authSection = document.getElementById('auth-section');
+const createPostSection = document.getElementById('create-post-section');
+const postsContainer = document.getElementById('posts-container');
+const authToggleBtn = document.getElementById('auth-toggle-btn');
 const signoutBtn = document.getElementById('signout-btn');
-const firestoreSection = document.getElementById('firestore-section');
+const userDisplay = document.getElementById('user-display');
+const authMessage = document.getElementById('auth-message');
+
+// --- 1. AUTHENTICATION ---
+
+// Toggle Login Form
+authToggleBtn.addEventListener('click', () => {
+    if (authSection.classList.contains('hidden')) {
+        authSection.classList.remove('hidden');
+        authToggleBtn.textContent = "Close";
+    } else {
+        authSection.classList.add('hidden');
+        authToggleBtn.textContent = "Sign In / Up";
+    }
+});
 
 // Sign Up
-signupBtn.addEventListener('click', async () => {
+document.getElementById('signup-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
     try {
-        await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-        userStatus.textContent = "Signed up successfully!";
-        logEvent(analytics, 'sign_up'); // Log Analytics Event
+        await createUserWithEmailAndPassword(auth, email, password);
+        authMessage.textContent = "Welcome! You are now signed up.";
+        authSection.classList.add('hidden');
     } catch (error) {
-        userStatus.textContent = `Error: ${error.message}`;
+        authMessage.textContent = error.message;
     }
 });
 
 // Sign In
-signinBtn.addEventListener('click', async () => {
+document.getElementById('signin-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
     try {
-        await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-        userStatus.textContent = "Signed in successfully!";
+        await signInWithEmailAndPassword(auth, email, password);
+        authMessage.textContent = "Welcome back!";
+        authSection.classList.add('hidden');
     } catch (error) {
-        userStatus.textContent = `Error: ${error.message}`;
+        authMessage.textContent = error.message;
     }
 });
 
 // Sign Out
 signoutBtn.addEventListener('click', async () => {
     await signOut(auth);
-    userStatus.textContent = "Signed out.";
+    userDisplay.textContent = "";
 });
 
-
-// 2. --- FIRESTORE FUNCTIONS ---
-
-const noteInput = document.getElementById('note-input');
-const addNoteBtn = document.getElementById('add-note-btn');
-const notesList = document.getElementById('notes-list');
-
-// Add Note
-addNoteBtn.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (user && noteInput.value.trim() !== '') {
-        try {
-            await addDoc(collection(db, "notes"), {
-                uid: user.uid,
-                text: noteInput.value,
-                timestamp: serverTimestamp()
-            });
-            noteInput.value = '';
-            logEvent(analytics, 'add_note', { item_name: 'user_note' }); // Log Analytics Event
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    } else {
-        alert("Please sign in and enter a note.");
-    }
-});
-
-// Real-time Listener (gets called when auth state changes AND when notes change)
-let unsubscribeFromNotes = null;
-
-function subscribeToUserNotes(uid) {
-    // If we have an old listener, stop it first
-    if (unsubscribeFromNotes) {
-        unsubscribeFromNotes();
-    }
-
-    // Create a query to only get notes belonging to the current user (by UID)
-    const q = query(collection(db, "notes"), where("uid", "==", uid));
-
-    // Listen for real-time updates
-    unsubscribeFromNotes = onSnapshot(q, (querySnapshot) => {
-        notesList.innerHTML = ''; // Clear the list
-        querySnapshot.forEach((doc) => {
-            const li = document.createElement('li');
-            li.textContent = doc.data().text;
-            notesList.appendChild(li);
-        });
-    });
-}
-
-
-// 3. --- AUTH STATE OBSERVER (The glue that manages UI) ---
-
+// Auth State Listener
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is signed in
-        document.getElementById('auth-section').style.display = 'none';
-        firestoreSection.style.display = 'block';
-        signoutBtn.style.display = 'block';
-        userStatus.textContent = `Hello, ${user.email} (${user.uid}).`;
-
-        // Start listening to their notes
-        subscribeToUserNotes(user.uid);
-
+        // User is logged in
+        createPostSection.classList.remove('hidden');
+        authToggleBtn.classList.add('hidden');
+        signoutBtn.classList.remove('hidden');
+        userDisplay.textContent = `User: ${user.email}`;
     } else {
-        // User is signed out
-        document.getElementById('auth-section').style.display = 'block';
-        firestoreSection.style.display = 'none';
-        signoutBtn.style.display = 'none';
-        userStatus.textContent = 'Please sign in or sign up.';
-        
-        // Stop listening to notes
-        if (unsubscribeFromNotes) {
-            unsubscribeFromNotes();
-            unsubscribeFromNotes = null;
-        }
-        notesList.innerHTML = '';
+        // User is logged out
+        createPostSection.classList.add('hidden');
+        authToggleBtn.classList.remove('hidden');
+        signoutBtn.classList.add('hidden');
+        userDisplay.textContent = "";
     }
 });
 
-// Log a page view event (Analytics will automatically track the page view, 
-// but you can log a specific custom event for the initial load)
-logEvent(analytics, 'page_load', { page_title: 'mini_project_home' });
+// --- 2. BLOG POST LOGIC ---
+
+// Publish Post
+document.getElementById('publish-btn').addEventListener('click', async () => {
+    const title = document.getElementById('post-title').value;
+    const content = document.getElementById('post-content').value;
+    const user = auth.currentUser;
+
+    if (user && title && content) {
+        try {
+            await addDoc(collection(db, "posts"), {
+                title: title,
+                content: content,
+                authorEmail: user.email,
+                uid: user.uid,
+                timestamp: serverTimestamp()
+            });
+            // Clear inputs
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+            alert("Post published!");
+            logEvent(analytics, 'publish_post');
+        } catch (e) {
+            console.error("Error adding post: ", e);
+            alert("Error publishing post.");
+        }
+    } else {
+        alert("Please fill in all fields.");
+    }
+});
+
+// Read Posts (Real-time Listener)
+// Note: We use 'posts' collection now, and order by timestamp descending
+const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+
+onSnapshot(q, (snapshot) => {
+    postsContainer.innerHTML = ''; // Clear list
+    
+    if (snapshot.empty) {
+        postsContainer.innerHTML = '<p>No posts yet. Be the first to write one!</p>';
+        return;
+    }
+
+    snapshot.forEach((doc) => {
+        const post = doc.data();
+        
+        // Create HTML for each post card
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('blog-post');
+        
+        const date = post.timestamp ? post.timestamp.toDate().toLocaleDateString() : 'Just now';
+        
+        postDiv.innerHTML = `
+            <h3>${post.title}</h3>
+            <div class="meta">By ${post.authorEmail} on ${date}</div>
+            <p>${post.content}</p>
+        `;
+        
+        postsContainer.appendChild(postDiv);
+    });
+});

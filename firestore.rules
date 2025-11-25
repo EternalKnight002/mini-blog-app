@@ -1,10 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Only allow read/write access if the user is authenticated 
-    // AND the note document's 'uid' field matches their user ID.
-    match /notes/{noteId} {
-      allow read, write: if request.auth.uid != null && request.auth.uid == resource.data.uid;
+    
+    // Change "notes" to "posts" for the blog
+    match /posts/{postId} {
+      // 1. PUBLIC READ: Anyone can read blog posts
+      allow read: if true;
+      
+      // 2. AUTH WRITE: Only logged-in users can create posts
+      allow create: if request.auth != null;
+      
+      // 3. OWNER EDIT/DELETE: Only the author can edit/delete their post
+      allow update, delete: if request.auth.uid == resource.data.uid;
     }
   }
 }
