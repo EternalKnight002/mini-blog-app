@@ -2,7 +2,6 @@
 
 A modern, dark-themed personal blog built with Firebase and vanilla JavaScript. Features a sleek design with smooth animations and full mobile responsiveness.
 
-![Blog Preview](https://i.pinimg.com/1200x/24/e9/f8/24e9f8ddd447184d0e1022b3cf319306.jpg)
 
 ## 🌟 Features
 
