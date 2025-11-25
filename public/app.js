@@ -7,7 +7,13 @@ const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com"; // <--- CHANGE THIS
 
 // --- PASTE FIREBASE CONFIG HERE ---
 const firebaseConfig = {
-   
+    apiKey: "AIzaSyAe3pTvyjv6WvEYt-XCWs2jiYmEBGnMyfA",
+  authDomain: "my-mini-app-7f2e2.firebaseapp.com",
+  projectId: "my-mini-app-7f2e2",
+  storageBucket: "my-mini-app-7f2e2.firebasestorage.app",
+  messagingSenderId: "940320689710",
+  appId: "1:940320689710:web:cedb05987b70c89b65d9bf",
+  measurementId: "G-0MTGM2D8V0"
 };
 
 const app = initializeApp(firebaseConfig);
