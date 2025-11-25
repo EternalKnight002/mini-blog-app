@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only allow read/write access if the user is authenticated 
+    // AND the note document's 'uid' field matches their user ID.
+    match /notes/{noteId} {
+      allow read, write: if request.auth.uid != null && request.auth.uid == resource.data.uid;
+    }
+  }
+}

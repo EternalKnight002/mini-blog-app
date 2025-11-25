@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Mini Project</title>
+    <script type="module" src="app.js" defer></script>
+</head>
+<body>
+    <div id="auth-section">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button id="signup-btn">Sign Up</button>
+        <button id="signin-btn">Sign In</button>
+        <button id="signout-btn" style="display:none;">Sign Out</button>
+        <p id="user-status"></p>
+    </div>
+
+    <div id="firestore-section" style="display:none;">
+        <h3>Add a Note</h3>
+        <input type="text" id="note-input" placeholder="Your note here">
+        <button id="add-note-btn">Add Note</button>
+        <h3>Your Notes</h3>
+        <ul id="notes-list"></ul>
+    </div>
+</body>
+</html>
