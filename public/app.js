@@ -7,7 +7,7 @@ const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com";
 
 // --- PASTE FIREBASE CONFIG HERE ---
 const firebaseConfig = {
-  
+ 
 };
 
 const app = initializeApp(firebaseConfig);
@@ -162,7 +162,8 @@ window.viewPost = (id) => {
             <div class="article-meta">Published on ${date} • By Aman Kumar</div>
         </div>
         <img src="${post.imageUrl}" class="article-img" onerror="this.src='https://placehold.co/800x400?text=No+Image'">
-        <div class="article-content">${post.content}</div>
+        
+        <div class="article-content">${marked.parse(post.content)}</div>
     `;
 };
 
@@ -184,6 +185,12 @@ viewAllBtn.addEventListener('click', () => {
 backHomeBtn.addEventListener('click', () => {
     fullPostView.classList.add('hidden');
     homeView.classList.remove('hidden');
+});
+document.getElementById('back-home-btn-bottom').addEventListener('click', () => {
+    fullPostView.classList.add('hidden');
+    homeView.classList.remove('hidden');
+    
+    window.scrollTo(0, 0); 
 });
 
 // Back to Home from All Posts
