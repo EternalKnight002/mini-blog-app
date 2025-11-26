@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aman Kumar - Personal Blog</title>
-    <link rel="icon" type="image/jpeg" href="fav.jpg">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="module" src="app.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -94,7 +92,7 @@
 
         /* --- NAVIGATION --- */
         nav { 
-            padding: 60px 20px 30px 20px; 
+            padding: 50px 20px 30px 20px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
@@ -114,6 +112,7 @@
             font-weight: 700; 
             color: #fff;
             animation: slideInLeft 0.8s ease-out;
+            min-width: 190px;
         }
         .nav-links { 
             display: flex; 
@@ -510,12 +509,10 @@
         }
         .article-img { 
             width: 100%; 
-            max-height: 500px;
-            object-fit: cover;
+            height: auto; 
             border-radius: 10px; 
             margin-bottom: 50px;
             animation: fadeIn 1s ease-out 0.3s both;
-            display: block;
         }
         .article-content { 
             font-size: 1.2rem; 
@@ -721,54 +718,6 @@
                 font-size: 1.8rem;
             }
         }
-          /* --- MARKDOWN CONTENT STYLING --- */
-            .article-content h1, 
-            .article-content h2, 
-            .article-content h3 {
-            color: #fff;
-            margin-top: 30px;
-            font-family: var(--serif-font);
-            }
-
-            .article-content a {
-            color: #4da6ff; /* Blue color for links */
-            text-decoration: underline;
-            cursor: pointer;
-            }
-
-            .article-content ul, 
-            .article-content ol {
-            margin-left: 20px;
-            color: var(--text-secondary);
-            }
-
-            .article-content strong {
-            color: #fff; /* Make bold text bright white */
-            }
-
-            /* Code Block Styling  */
-            .article-content pre {
-         background: #1a1a1a;
-         padding: 15px;
-         border-radius: 8px;
-            overflow-x: auto;
-         border: 1px solid #333;
-            margin: 20px 0;
-            }
-
-            .article-content code {
-            font-family: 'Consolas', 'Monaco', monospace;
-            color: #ff79c6; /* Pinkish color for code */
-            background: rgba(255,255,255,0.1);
-            padding: 2px 5px;
-            border-radius: 4px;
-         }
-
-            .article-content pre code {
-            background: transparent;
-            padding: 0;
-            color: #e0e0e0;
-            }
     </style>
 </head>
 <body>
@@ -845,20 +794,16 @@
     </div>
 
     <!-- FULL POST VIEW -->
-       <div id="full-post-view" class="hidden">
+    <div id="full-post-view" class="hidden">
         <a id="back-home-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Stories</a>
-        
         <div id="full-post-content"></div>
-        
-        <a id="back-home-btn-bottom" class="back-btn" style="margin-top: 50px;"><i class="fas fa-arrow-left"></i> Back to Stories</a>
-       </div>
-
+    </div>
 
     <!-- FOOTER -->
     <section id="contact" class="footer-section">
         <div class="container">
             <h2>Get in touch</h2>
-            <p>Looking for collaboration or full-time roles — feel free to reach out.</p>
+            <p>Looking for collaboration or full-time roles.</p>
             <a href="mailto:resoamankumar@gmail.com" class="email-btn">Email Me</a>
             <div class="social-links">
                 <a href="https://github.com/EternalKnight002" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
