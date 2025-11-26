@@ -7,7 +7,7 @@ const ADMIN_EMAIL = "2k23.csiot2311374@gmail.com";
 
 // --- PASTE FIREBASE CONFIG HERE ---
 const firebaseConfig = {
-  
+ 
 };
 
 const app = initializeApp(firebaseConfig);
